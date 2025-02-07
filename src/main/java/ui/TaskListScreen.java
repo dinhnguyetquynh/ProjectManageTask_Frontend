@@ -94,14 +94,14 @@ public class TaskListScreen extends JFrame {
         //WEST
         //Menu
         JPanel menuPanel = new JPanel();
-        menuPanel.setPreferredSize(new Dimension(250,screenHeight));
+        menuPanel.setPreferredSize(new Dimension(220,screenHeight));
         menuPanel.setBackground(Color.white);
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
         
         //Tạo viền trái cho panel
         menuPanel.setBorder(BorderFactory.createCompoundBorder(
         		BorderFactory.createMatteBorder(0,0,0,2, Color.LIGHT_GRAY),
-        		BorderFactory.createEmptyBorder(20, 10, 0, 0)
+        		BorderFactory.createEmptyBorder(15, 10, 0, 0)
         		));
         // Tạo các mục menu
         menuPanel.add(createMenuItem("Trang chủ", true));
@@ -190,8 +190,8 @@ public class TaskListScreen extends JFrame {
        southPanel.setBackground(Color.white);
        centerPanel.add(southPanel,BorderLayout.SOUTH);
         
-        
-        add(centerPanel,BorderLayout.CENTER);
+        Panel_DanhSachProject panel = new Panel_DanhSachProject();
+        add(panel,BorderLayout.CENTER);
       
         
       
