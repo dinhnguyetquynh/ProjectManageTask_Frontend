@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -39,6 +40,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import model.Account;
 import model.Project;
 import model.Request;
 import service.MessageListener;
@@ -59,13 +61,13 @@ public class GUI_HOME extends JFrame implements MessageListener {
 	private DefaultListModel listModel;
 	private JList menuList;
 	
-	public static void screenHome() {
+	public static void screenHome(Account account) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 				//Dòng system để chỉnh hình ảnh không bể
 					System.setProperty("sun.java2d.uiScale", "1.0");
-				GUI_HOME frame = new GUI_HOME();
+				GUI_HOME frame = new GUI_HOME(account);
 				frame.setVisible(true);
 				} catch (Exception e) {
 				e.printStackTrace();
@@ -74,16 +76,17 @@ public class GUI_HOME extends JFrame implements MessageListener {
 		});
 	}
 	
-	public static void main(String[] args) {
-		screenHome();
-	}
+//	public static void main(String[] args) {
+//		screenHome();
+//	}
 	
 
 
 
-
-	public GUI_HOME() {
-		
+	private Account account;
+	public GUI_HOME(Account account) {
+		super(account.getRole());
+		this.account = account;
 		
 		
 		//Lấy kích thước màn hình để hiển thị full màn 
@@ -141,10 +144,13 @@ public class GUI_HOME extends JFrame implements MessageListener {
         menuPanel.add(createMenuItem("Dự Án", true,"PROJECT"));
         menuPanel.add(createMenuItem("	Danh sách dự án", false,"LIST_PROJECT"));
         menuPanel.add(createMenuItem("	Lịch sử", false,"HISTORY"));
-
-        menuPanel.add(createMenuItem("Nhân viên", true,"STAFF"));
-        menuPanel.add(createMenuItem("  Danh sách nhân viên", false,"LIST_STAFF"));
-        menuPanel.add(createMenuItem("  Tài khoản", false,"ACCOUNT"));
+        
+        if(account.getRole().equals("Manager")) {
+        	   menuPanel.add(createMenuItem("Nhân viên", true,"STAFF"));
+               menuPanel.add(createMenuItem("  Danh sách nhân viên", false,"LIST_STAFF"));
+               menuPanel.add(createMenuItem("  Tài khoản", false,"ACCOUNT"));
+        }
+     
         
 
         add(menuPanel,BorderLayout.WEST);
@@ -155,31 +161,22 @@ public class GUI_HOME extends JFrame implements MessageListener {
         cardLayout = new CardLayout();
         centerPanel = new JPanel(cardLayout);
         
-
-        
-
-//        // Bảng hiển thị danh sách dự án
-//        String[] columnNames = {"ID", "Tên Dự Án", "Mô Tả"};
-//        tableModel = new DefaultTableModel(columnNames, 0);
-//        projectTable = new JTable(tableModel);
-//        JScrollPane scrollPane = new JScrollPane(projectTable);
-//        centerPanel.add(scrollPane, BorderLayout.CENTER);
+        Panel_DanhSachProject home= new Panel_DanhSachProject();
+        centerPanel.add(home);
         
         
         
         add(centerPanel,BorderLayout.CENTER);
-       
-        //thêm danh sách project
-//       
-//        centerPanel.add(new Panel_DetailTask(),"LIST_TASK");
-//        centerPanel.add(new Panel_ThongBao());
-//        centerPanel.add(new Panel_LichSu(),"HISTORY");
+
         
         Service.getInstance().addMessageListener(this);
 		
 		
 	}
 		
+	public String getRole() {
+		return account.getRole();
+	}
 	// hàm chỉnh các menuItem
 	  private JLabel createMenuItem(String text, boolean isBold,String panelName) {
 	        JLabel label = new JLabel(text);
@@ -206,8 +203,10 @@ public class GUI_HOME extends JFrame implements MessageListener {
 	        	}
 	        	private JPanel createPanelByName(String panelName) {
 	        		 switch (panelName) {
-	        		   
-	        		    	
+	        		 	case "HOME":
+	        		 		return new Panel_DanhSachProject();
+	        		 	case "LIST_PROJECT":
+	        		 		return new Panel_DanhSachProject();
 	        	        case "NOTIFY":
 	        	            return new Panel_ThongBao();
 	        	        case "HISTORY":
@@ -242,17 +241,22 @@ public class GUI_HOME extends JFrame implements MessageListener {
 
 	@Override
 	public void onMessageReceived(Request<?> request) {
-		 if ("LIST_PROJECT".equals(request.getMessage()) && request.getData() instanceof List<?>) {
-	            List<Project> projects = (List<Project>) request.getData();
-	            updateProjectTable(projects);
-	        }
-		
+		String message = request.getMessage();
+		if (message.equals("REGISTER")) {
+			Object[] options = {"Huỷ","Xem"};
+			int n = JOptionPane.showOptionDialog(this, 
+					"Bạn vừa nhận được một yêu cầu đăng ký tài khoản", 
+					"Chú ý", 
+					JOptionPane.YES_NO_OPTION, 
+					JOptionPane.PLAIN_MESSAGE, 
+					null, options, options[1]);
+			if (n == 1) {
+				Account acc = (Account) request.getData();
+				acc.getUser().setManager((account.getUser()));;
+				GUI_DuyetYeuCau.screenDuyetYeuCau(acc);
+			}
+		}
 	}
-	 private void updateProjectTable(List<Project> projects) {
-	        tableModel.setRowCount(0); // Xóa dữ liệu cũ
-	        for (Project project : projects) {
-	            tableModel.addRow(new Object[]{project.getId(), project.getTitle(), project.getDescription()});
-	        }
-	    }
+	
 
 }

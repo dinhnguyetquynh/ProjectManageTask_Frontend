@@ -84,9 +84,9 @@ public class Service {
 			                            // ✅ Gửi dữ liệu đến giao diện để hiển thị
 //			                            notifyListeners(request);
 			                            EventQueue.invokeLater(() -> {
-			                                GUI_HOME home = new GUI_HOME(); // Tạo giao diện
-			                                home.setVisible(true); // Hiển thị giao diện
-			                                home.onMessageReceived(request); // Cập nhật dữ liệu vào bảng
+//			                                GUI_HOME home = new GUI_HOME(); // Tạo giao diện
+//			                                home.setVisible(true); // Hiển thị giao diện
+//			                                home.onMessageReceived(request); // Cập nhật dữ liệu vào bảng
 			                            });
 			                            
 			                        }

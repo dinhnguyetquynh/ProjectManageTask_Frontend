@@ -11,6 +11,8 @@ public class Constants {
 	public static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 24);
 	// Kiểu chữ in đậm
 	public static final Font FONT_BOLD = new Font("Arial", Font.BOLD, 20);
+
 	// Màu button
 	public static final Color COLOR_BUTTON = Color.decode("#F299C2");
+
 }
