@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="projects")
 public class Project implements Serializable{
+	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name="project_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,8 +74,12 @@ public class Project implements Serializable{
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "Project [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
+				+ ", endDate=" + endDate + "]";
+	}
+	 
 
 	
 	

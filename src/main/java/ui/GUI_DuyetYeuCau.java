@@ -142,8 +142,7 @@ public class GUI_DuyetYeuCau extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o.equals(btnDuyet)) {
-			Request<Account> request = new Request<Account>("CREATE_ACCOUNT", account);
-			Service.getInstance().sendMessage(request);
+			
 			dispose();
 		}
 		

@@ -27,17 +27,19 @@ import javax.swing.border.EmptyBorder;
 
 import design.Constants;
 import model.Project;
+import model.Request;
+import service.MessageListener;
 
 
-public class Panel_DanhSachProject extends JPanel implements ActionListener {
+public class Panel_DanhSachProject extends JPanel implements ActionListener,MessageListener {
 
 	private ArrayList<Panel_Project_Item> listProjectItem;
 	private JButton btnTaoDuAn;
 	private String role;
-	
+
 
 	// Panel này hiển thị tất cả các Project
-	public Panel_DanhSachProject() {
+	public Panel_DanhSachProject(List<Project> listProject) {
 		role = "Manager";
 		Font font = Constants.DEFAULT_FONT;
 		Color btnColor = Constants.COLOR_BUTTON;
@@ -80,8 +82,8 @@ public class Panel_DanhSachProject extends JPanel implements ActionListener {
         listProjectItem = new ArrayList<Panel_Project_Item>();
         
         // Tạo 8 project mẫu
-        for (int i = 0; i < 8; i++) {
-        	Panel_Project_Item panel_Project_Item = new Panel_Project_Item("Project example " + i);
+        for (int i = 0; i < listProject.size(); i++) {
+        	Panel_Project_Item panel_Project_Item = new Panel_Project_Item(listProject.get(i).getTitle());
         	pCen.add(panel_Project_Item);
         	pCen.add(Box.createVerticalStrut(15));
         	listProjectItem.add(panel_Project_Item);
@@ -141,5 +143,11 @@ public class Panel_DanhSachProject extends JPanel implements ActionListener {
 			TaoProject frame = new TaoProject();
 			frame.setVisible(true);
 		}
+	}
+
+	@Override
+	public void onMessageReceived(Request<?> request) {
+		
+		
 	}
 }

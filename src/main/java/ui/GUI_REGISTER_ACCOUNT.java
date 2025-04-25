@@ -227,8 +227,7 @@ public class GUI_REGISTER_ACCOUNT extends JFrame implements ActionListener, Mous
 		if (o.equals(btnDone)) {
 			Account acc = getDataInput();
 			if (acc != null) {
-				Request<Account> request = new Request<Account>("REGISTER", acc);
-				Service.getInstance().sendMessage(request);
+				
 			}
 		}
 	}

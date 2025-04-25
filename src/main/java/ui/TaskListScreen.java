@@ -190,8 +190,7 @@ public class TaskListScreen extends JFrame {
        southPanel.setBackground(Color.white);
        centerPanel.add(southPanel,BorderLayout.SOUTH);
         
-        Panel_DanhSachProject panel = new Panel_DanhSachProject();
-        add(panel,BorderLayout.CENTER);
+       
       
         
       

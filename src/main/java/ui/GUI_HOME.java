@@ -45,6 +45,7 @@ import model.Project;
 import model.Request;
 import service.MessageListener;
 import service.Service;
+import service.ServiceMessage;
 
 import java.awt.Canvas;
 import java.awt.CardLayout;
@@ -54,12 +55,14 @@ import javax.swing.JButton;
 public class GUI_HOME extends JFrame implements MessageListener {
 
 	private static final long serialVersionUID = 1L;
-	private DefaultTableModel tableModel;
-	private JTable projectTable;
+	
 	public CardLayout cardLayout;
 	private JPanel centerPanel;
-	private DefaultListModel listModel;
-	private JList menuList;
+	private Account account;
+
+	private Panel_DanhSachProject centerListProject;
+
+	private List<Project> list=null;
 	
 	public static void screenHome(Account account) {
 		EventQueue.invokeLater(new Runnable() {
@@ -67,8 +70,8 @@ public class GUI_HOME extends JFrame implements MessageListener {
 				try {
 				//Dòng system để chỉnh hình ảnh không bể
 					System.setProperty("sun.java2d.uiScale", "1.0");
-				GUI_HOME frame = new GUI_HOME(account);
-				frame.setVisible(true);
+				    GUI_HOME frame = new GUI_HOME(account);
+				    frame.setVisible(true);
 				} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -76,14 +79,6 @@ public class GUI_HOME extends JFrame implements MessageListener {
 		});
 	}
 	
-//	public static void main(String[] args) {
-//		screenHome();
-//	}
-	
-
-
-
-	private Account account;
 	public GUI_HOME(Account account) {
 		super(account.getRole());
 		this.account = account;
@@ -161,15 +156,18 @@ public class GUI_HOME extends JFrame implements MessageListener {
         cardLayout = new CardLayout();
         centerPanel = new JPanel(cardLayout);
         
-        Panel_DanhSachProject home= new Panel_DanhSachProject();
-        centerPanel.add(home);
         
         
         
         add(centerPanel,BorderLayout.CENTER);
+       
 
         
         Service.getInstance().addMessageListener(this);
+        
+        ServiceMessage sm = ServiceMessage.getInstance();
+        String request = sm.createMessage("LIST_PROJECT", "");
+        Service.getInstance().sendMessage(request);
 		
 		
 	}
@@ -204,9 +202,10 @@ public class GUI_HOME extends JFrame implements MessageListener {
 	        	private JPanel createPanelByName(String panelName) {
 	        		 switch (panelName) {
 	        		 	case "HOME":
-	        		 		return new Panel_DanhSachProject();
+	        		 		return new Panel_DanhSachProject(list);
 	        		 	case "LIST_PROJECT":
-	        		 		return new Panel_DanhSachProject();
+	        		 		
+	        		 		return new Panel_DanhSachProject(list);
 	        	        case "NOTIFY":
 	        	            return new Panel_ThongBao();
 	        	        case "HISTORY":
@@ -255,6 +254,15 @@ public class GUI_HOME extends JFrame implements MessageListener {
 				acc.getUser().setManager((account.getUser()));;
 				GUI_DuyetYeuCau.screenDuyetYeuCau(acc);
 			}
+		}else if(message.equals("LIST_PROJECT")) {
+			list = (List<Project>) request.getData();
+			centerListProject = new Panel_DanhSachProject(list);
+			centerPanel.add(centerListProject);
+
+			centerPanel.revalidate();
+			centerPanel.repaint();
+			cardLayout.show(centerPanel, "LIST_PROJECT");
+			
 		}
 	}
 	

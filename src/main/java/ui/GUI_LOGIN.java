@@ -21,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.AbstractBorder;
 
+import com.google.gson.Gson;
+
 import design.Constants;
 import design.RoundedPasswordField;
 import design.RoundedTextField;
@@ -29,6 +31,7 @@ import model.Account;
 import model.Request;
 import service.MessageListener;
 import service.Service;
+import service.ServiceMessage;
 
 
 public class GUI_LOGIN extends JFrame implements MouseListener, ActionListener, MessageListener {
@@ -135,8 +138,8 @@ public class GUI_LOGIN extends JFrame implements MouseListener, ActionListener, 
 		add(pCen);
 		
 		// test
-		txtTaiKhoan.setText("kristiepaucek");
-		txtMatKhau.setText("834466110689");
+		txtTaiKhoan.setText("tyhowe");
+		txtMatKhau.setText("9n5vnk7you2l07");
 		
 		// Thêm sự kiện để lắng nghe dữ liệu trả về từ server
 		Service.getInstance().addMessageListener(this);
@@ -175,9 +178,9 @@ public class GUI_LOGIN extends JFrame implements MouseListener, ActionListener, 
 		acc.setAccountName(txtTaiKhoan.getText());
 		acc.setPassword(txtMatKhau.getText());
 		
-		Request<Account> request = new Request<Account>("LOGIN", acc);
-		
-		// Gọi hàm sendMessage để gửi request đến server
+		ServiceMessage sm = ServiceMessage.getInstance();
+		Gson gson = new Gson();
+		String request = sm.createMessage("LOGIN", sm.createObjectJson("account", gson.toJson(acc)));
 		Service.getInstance().sendMessage(request);
 	}
 	

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="tasks")
-public class Task {
+public class Task implements Serializable{
+	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name="task_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
