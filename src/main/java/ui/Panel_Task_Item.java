@@ -21,8 +21,9 @@ public class Panel_Task_Item extends JPanel{
 	public Panel_Task_Item() {
 	
 		setLayout(new GridLayout(1, 6, 10, 0));// Đảm bảo các cột thẳng hàng với titleBox
-		setPreferredSize(new Dimension(1600, 80));
-        setMaximumSize(new Dimension(1600, 80));
+		setPreferredSize(new Dimension(1600, 50));
+        setMaximumSize(new Dimension(1600, 50));
+        setMinimumSize(new Dimension(1600, 50)); 
         setBackground(Color.decode("#D9D9D9"));
 
         JLabel nameTask = new JLabel("Frontend", SwingConstants.CENTER);
@@ -32,8 +33,6 @@ public class Panel_Task_Item extends JPanel{
 
         ImageIcon eyeIcon = new ImageIcon(Panel_Task_Item.class.getResource("/icon/visible.png"));
         JLabel detail = new JLabel(eyeIcon, SwingConstants.CENTER);
-//        JButton detail = new JButton(eyeIcon);
-//        detail.setBackground(Color.LIGHT_GRAY);
         detail.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
@@ -43,8 +42,6 @@ public class Panel_Task_Item extends JPanel{
 
         ImageIcon deleteIcon = new ImageIcon(Panel_Task_Item.class.getResource("/icon/delete.png"));
         JLabel delete = new JLabel(deleteIcon, SwingConstants.CENTER);
-//        JButton delete = new JButton(deleteIcon);
-//        delete.setBackground(Color.LIGHT_GRAY);
 
         Font itemFont = new Font("Arial", Font.PLAIN, 18);
         nameTask.setFont(itemFont);

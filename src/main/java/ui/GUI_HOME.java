@@ -56,9 +56,9 @@ public class GUI_HOME extends JFrame implements MessageListener {
 
 	private static final long serialVersionUID = 1L;
 	
-	public CardLayout cardLayout;
-	private JPanel centerPanel;
-	private Account account;
+	public static CardLayout cardLayout;
+	private static JPanel centerPanel;
+	private static Account account;
 
 	private Panel_DanhSachProject centerListProject;
 
@@ -172,7 +172,7 @@ public class GUI_HOME extends JFrame implements MessageListener {
 		
 	}
 		
-	public String getRole() {
+	public static String getRole() {
 		return account.getRole();
 	}
 	// hàm chỉnh các menuItem
@@ -236,6 +236,12 @@ public class GUI_HOME extends JFrame implements MessageListener {
 			});
 	        return label;
 	    }
+	  
+	  public static void showProjectDetail(Project project) {
+		    Panel_ListTask detailPanel = new Panel_ListTask(project);
+		    centerPanel.add(detailPanel, "DETAIL_PROJECT");
+		    cardLayout.show(centerPanel, "DETAIL_PROJECT");
+		}
 
 
 	@Override
@@ -256,13 +262,21 @@ public class GUI_HOME extends JFrame implements MessageListener {
 			}
 		}else if(message.equals("LIST_PROJECT")) {
 			list = (List<Project>) request.getData();
+			if(list==null) {
+				System.out.println("Không nhận được list từ server");
+			}
+//			centerListProject = new Panel_DanhSachProject(list);
+//			centerPanel.add(centerListProject);
+//
+//			centerPanel.revalidate();
+//			centerPanel.repaint();
+//			cardLayout.show(centerPanel, "LIST_PROJECT");
+			centerPanel.removeAll(); // Xóa toàn bộ panel cũ
 			centerListProject = new Panel_DanhSachProject(list);
-			centerPanel.add(centerListProject);
-
+			centerPanel.add(centerListProject, "LIST_PROJECT");
 			centerPanel.revalidate();
 			centerPanel.repaint();
 			cardLayout.show(centerPanel, "LIST_PROJECT");
-			
 		}
 	}
 	

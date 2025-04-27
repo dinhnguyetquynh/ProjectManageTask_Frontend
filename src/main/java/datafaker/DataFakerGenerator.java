@@ -3,6 +3,7 @@ package datafaker;
 import java.sql.Date;
 import java.text.Normalizer;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,15 +63,18 @@ public class DataFakerGenerator {
         return new Project(title, description, startDate, endDate);
     }
 	
-	public Task generateTask(Project project, Task parentTask) {
-        String title = faker.job().title();
-        String description = faker.lorem().paragraph();
-        Priority priority = Priority.values()[random.nextInt(Priority.values().length)];
-        Date createAt = Date.valueOf(LocalDate.now().minusDays(random.nextInt(10)));
-        Date dueDate = Date.valueOf(createAt.toLocalDate().plusDays(random.nextInt(50)));
-        Status status = Status.values()[random.nextInt(Status.values().length)];
-
-        return new Task(title, description, priority, createAt, dueDate, status, project, parentTask);
-    }
+//	public Task generateTask(Project project, Task parentTask) {
+//		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+//        String title = faker.job().title();
+//        String description = faker.lorem().paragraph();
+//        Priority priority = Priority.values()[random.nextInt(Priority.values().length)];
+//        
+//        Date createAt = Date.valueOf(LocalDate.now().minusDays(random.nextInt(10)));
+//        Date dueDate = Date.valueOf(createAt.toLocalDate().plusDays(random.nextInt(50)));
+//        
+//        Status status = Status.values()[random.nextInt(Status.values().length)];
+//
+//        return new Task(title, description, priority, createAt, dueDate, status, project, parentTask);
+//    }
 
 }

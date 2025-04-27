@@ -26,7 +26,7 @@ public class Account implements Serializable{
 	private String role;
 	@OneToOne
 	@JoinColumn(name="user_id")
-	private User user;
+	 private User user;
 	
 	public Account() {
 		// TODO Auto-generated constructor stub

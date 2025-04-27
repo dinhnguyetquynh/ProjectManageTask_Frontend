@@ -24,18 +24,24 @@ public class Project implements Serializable{
 	private Date startDate;
 	@Column(name="end_date")
 	private Date endDate;
+	
+	private int numberUser;
 	public Project() {
 		// TODO Auto-generated constructor stub
 	}
-	public Project(int id, String title, String description, Date startDate, Date endDate) {
+	
+	
+	public Project(int id, String title, String description, Date startDate, Date endDate, int numberUser) {
 		
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.numberUser = numberUser;
 	}
-	
+
+
 	public Project(String title, String description, Date startDate, Date endDate) {
 		
 		this.title = title;
@@ -74,6 +80,17 @@ public class Project implements Serializable{
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+	
+	public int getNumberUser() {
+		return numberUser;
+	}
+
+
+	public void setNumberUser(int numberUser) {
+		this.numberUser = numberUser;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Project [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate

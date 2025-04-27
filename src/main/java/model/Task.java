@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class Task implements Serializable{
 	private String title;
 	private String description;
 	private Priority priority;
-	private Date createAt;
-	private Date dueDate;
+	private LocalDateTime createAt;
+	private LocalDateTime dueDate;
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	@ManyToOne
@@ -48,8 +49,8 @@ public class Task implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Task(int id, String title, String description, Priority priority, Date createAt, Date dueDate, Status status,
-			Project project, Task parentTask) {
+	public Task(int id, String title, String description, Priority priority, LocalDateTime createAt,
+			LocalDateTime dueDate, Status status, Project project, Task parentTask) {
 		
 		this.id = id;
 		this.title = title;
@@ -62,17 +63,20 @@ public class Task implements Serializable{
 		this.parentTask = parentTask;
 	}
 	
-	public Task(String title, String description, Priority priority, Date createAt, Date dueDate, Status status,
-			Project project, Task parentTask) {
+
+	public Task(int id, String title, String description, Priority priority, LocalDateTime createAt,
+			LocalDateTime dueDate, Status status) {
+	
+		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.priority = priority;
 		this.createAt = createAt;
 		this.dueDate = dueDate;
 		this.status = status;
-		this.project = project;
-		this.parentTask = parentTask;
 	}
+	
+
 
 	public int getId() {
 		return id;
@@ -106,19 +110,19 @@ public class Task implements Serializable{
 		this.priority = priority;
 	}
 
-	public Date getCreateAt() {
+	public LocalDateTime getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(Date createAt) {
+	public void setCreateAt(LocalDateTime createAt) {
 		this.createAt = createAt;
 	}
 
-	public Date getDueDate() {
+	public LocalDateTime getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(LocalDateTime dueDate) {
 		this.dueDate = dueDate;
 	}
 
@@ -145,6 +149,19 @@ public class Task implements Serializable{
 	public void setParentTask(Task parentTask) {
 		this.parentTask = parentTask;
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", title=" + title + ", description=" + description + ", priority=" + priority
+				+ ", createAt=" + createAt + ", dueDate=" + dueDate + ", status=" + status + ", project=" + project
+				+ ", parentTask=" + parentTask + "]";
+	}
+
+	
     
 	
 }

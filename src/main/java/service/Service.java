@@ -2,6 +2,7 @@ package service;
 
 import java.awt.EventQueue;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,20 +12,34 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import jakarta.json.JsonValue;
+
+import java.lang.reflect.Type;
+
 import model.Account;
+import model.Priority;
 import model.Project;
 import model.Request;
+import model.Status;
+import model.Task;
 import ui.GUI_HOME;
+import utils.GsonHelper;
 
 public class Service {
 
@@ -35,6 +50,7 @@ public class Service {
 	private List<MessageListener> listeners = new ArrayList<>();
 	BufferedReader in;
 	PrintWriter out;
+	private DataInputStream dis;
 	
 	public static Service getInstance() {
 		if (instance == null) {
@@ -57,6 +73,7 @@ public class Service {
 					while (true) {
 						// Nếu nhận được dữ liệu (Request)
 						String receive = in.readLine();
+						System.out.println("Request nhan dc la:"+receive);
 						if (receive != null) {
 							try (JsonReader reader = Json.createReader(new StringReader(receive))) {
 								JsonObject jo = reader.readObject();
@@ -68,39 +85,7 @@ public class Service {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						}
-//						if (receivedObj instanceof Request<?>) {
-//							Request<?> request = (Request<?>) receivedObj;
-//							String message = request.getMessage();
-//							switch (message) {
-//							case "LOGIN":
-//								if (request.getData() == null) {
-//									System.out.println("Đăng nhập thất bại");
-//								} else if (request.getData() instanceof Account) {
-//									Account acc = (Account) request.getData();
-//									System.out.println("Đăng nhập thành công");
-//									// Gửi dữ liệu đến giao diện 
-//									notifyListeners(request);
-//								} else {
-//									// Response nhận được dữ liệu không hợp lệ
-//								}
-//								break;
-//								
-//							case "REGISTER":
-//								if (request.getData() == null) {
-//									System.out.println("Đăng ký thất bại");
-//								} else if (request.getData() instanceof Account) {
-//									// Gửi dữ liệu đến giao diện 
-//									notifyListeners(request);
-//								} else {
-//									// Response nhận được dữ liệu không hợp lệ
-//								}
-//								break;
-//							default:
-//								break;
-//							}
-//
-//						}
+						}				
 					}
 				} catch (Exception e) {
 					System.out.println("Kết nối bị gián đoạn: " + e.getMessage());
@@ -114,9 +99,11 @@ public class Service {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+
 	}
 	
-	private void handleReceive(String message, JsonObject joData) {
+	private void handleReceive(String message, JsonObject joData) throws ParseException {
 		switch (message) {
 		case "LOGIN":
 			if (joData != null) {
@@ -149,8 +136,53 @@ public class Service {
 				projects.add(p);
 				
 			}
+			for(Project p: projects) {
+				System.out.println("Project nhan lai dc la:"+p);
+			}
 			Request<List<Project>> request = new Request<List<Project>>("LIST_PROJECT", projects);
 			notifyListeners(request);
+			break;
+			
+		case "LIST_TASKS":
+			List<Task> tasks = new ArrayList<Task>();
+			
+			JsonArray jaTask = joData.getJsonArray("listTask");
+			for(JsonValue jv : jaTask) {
+				JsonObject joTask = (JsonObject)jv;
+//				int id, String title, String description, Priority priority, Date createAt, Date dueDate,
+//				Status status
+				int id = joTask.getInt("id");
+				String title = joTask.getString("title");
+				String description = joTask.getString("description");
+				String priority = joTask.getString("priority");
+				Priority priority1 = Priority.valueOf(priority);
+				
+				String createAt = joTask.getString("createAt");
+				
+		        String  dueDate = joTask.getString("dueDate");
+		        
+	            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Định dạng mặc định
+
+	            // Chuyển từ String sang LocalDateTime
+	            LocalDateTime createDate = LocalDateTime.parse(createAt, formatter);
+	            LocalDateTime dueDate1 = LocalDateTime.parse(dueDate , formatter);
+		   
+		        
+		        String status = joTask.getString("status");
+		        Status stt = Status.valueOf(status);
+		        
+		        Task task = new Task(id, title, description, priority1, createDate, dueDate1, stt);
+				
+			    
+				tasks.add(task);
+				
+			}
+			for(Task t:tasks) {
+				System.out.println("Task nhan lai dc ở client la:"+t);
+			}
+			Request<List<Task>> request1 = new Request<List<Task>>("LIST_TASKS", tasks);
+			notifyListeners(request1);
+			break;
 		
 		}
 	}
@@ -180,7 +212,7 @@ public class Service {
     
     // Thông báo cho tất cả UI khi nhận được dữ liệu
     private void notifyListeners(Request<?> request) {
-        for (MessageListener listener : listeners) {
+        for (MessageListener listener : new ArrayList<>(listeners)) {
             listener.onMessageReceived(request);
         }
     }

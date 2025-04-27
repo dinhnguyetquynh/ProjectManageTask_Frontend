@@ -19,23 +19,32 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
+import com.google.gson.Gson;
+
 import design.Constants;
+import model.Project;
+import service.MessageListener;
+import service.Service;
+import service.ServiceMessage;
 
 public class Panel_Project_Item extends JPanel implements ActionListener{
 
 	private JTextArea txtAreaNgay;
-	private String projectName;
+	
 	private JTextArea txtAreaGhiChu;
 	private JButton btnTrash;
-
-	public Panel_Project_Item(String projectName) {
-		this.projectName = projectName;
+	private Project project;
+	private String projectName;
+	private String role;
+	
+	public Panel_Project_Item(Project p) {
+		this.project = p;
 		initComponents();
-		
 		initActions();
 	}
 	
 	public String getProjectName() {
+		projectName = project.getTitle();
 		return projectName;
 	}
 
@@ -67,6 +76,7 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 	}
 
 	private void initComponents() {
+		role = GUI_HOME.getRole();
 		Font font = Constants.DEFAULT_FONT;
 		Box b = Box.createVerticalBox();
 		Box b1,b2;
@@ -74,11 +84,15 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 		b.add(Box.createVerticalStrut(5));
 		b.add(b1 = Box.createHorizontalBox());
 		JLabel lblTenDuAn, lblSoNguoi;
-		b1.add(lblTenDuAn = new JLabel(projectName));
+		
+		b1.add(lblTenDuAn = new JLabel(project.getTitle()));
 		b1.add(Box.createHorizontalStrut(35));
-		b1.add(lblSoNguoi = new JLabel("25 Người"));
-		b1.add(txtAreaNgay = new JTextArea("Từ: " + "15/12/2024" + "\n" + "Đến: " + "15/4/2025"));
-		String text = "A project description seems self-explanatory, but don’t underestimate a well-written project description as it sets your project up for success.";
+		
+//		String numberUser = String.valueOf(project.getNumberUser());
+		b1.add(lblSoNguoi = new JLabel(project.getNumberUser()+""));
+		b1.add(txtAreaNgay = new JTextArea("Từ: " + project.getStartDate() + "\n" + "Đến: " + project.getEndDate()));
+		
+		String text = project.getDescription();
 		if (text.length() > 85) {
 			int index = text.substring(0, 80).lastIndexOf(" ");
 			b1.add(txtAreaGhiChu = new JTextArea(text.substring(0, index) + "..."));	
@@ -93,8 +107,12 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 		}
 		
 		b1.add(Box.createHorizontalStrut(25));
-		b1.add(btnTrash = new JButton(""));
-		btnTrash.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("img\\24-trash.png")));
+		btnTrash = new JButton("");
+		if(role == "Manager") {
+			b1.add(btnTrash);
+			btnTrash.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("img\\24-trash.png")));
+		}
+		
 		
 		// Tạo màu trong suốt cho button
 		btnTrash.setBorderPainted(false);
@@ -139,7 +157,12 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o.equals(btnTrash)) {
+			Gson gson = new Gson();
 			JOptionPane.showMessageDialog(null, "Xác nhận xoá project: " + getProjectName() + " ?");
+		    ServiceMessage sm = ServiceMessage.getInstance();
+	        String request = sm.createMessage("DELETE_PROJECT", sm.createObjectJson("projectId", project.getId()+""));
+	        System.out.println(request);
+	        Service.getInstance().sendMessage(request);
 		}
 		
 	}

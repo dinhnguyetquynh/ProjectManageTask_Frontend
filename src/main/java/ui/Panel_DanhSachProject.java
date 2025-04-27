@@ -25,10 +25,14 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.google.gson.Gson;
+
 import design.Constants;
 import model.Project;
 import model.Request;
 import service.MessageListener;
+import service.Service;
+import service.ServiceMessage;
 
 
 public class Panel_DanhSachProject extends JPanel implements ActionListener,MessageListener {
@@ -40,7 +44,7 @@ public class Panel_DanhSachProject extends JPanel implements ActionListener,Mess
 
 	// Panel này hiển thị tất cả các Project
 	public Panel_DanhSachProject(List<Project> listProject) {
-		role = "Manager";
+		role = GUI_HOME.getRole();
 		Font font = Constants.DEFAULT_FONT;
 		Color btnColor = Constants.COLOR_BUTTON;
 		
@@ -82,15 +86,21 @@ public class Panel_DanhSachProject extends JPanel implements ActionListener,Mess
         listProjectItem = new ArrayList<Panel_Project_Item>();
         
         // Tạo 8 project mẫu
-        for (int i = 0; i < listProject.size(); i++) {
-        	Panel_Project_Item panel_Project_Item = new Panel_Project_Item(listProject.get(i).getTitle());
+        for (Project p:listProject) {
+        	Panel_Project_Item panel_Project_Item = new Panel_Project_Item(p);
         	pCen.add(panel_Project_Item);
         	pCen.add(Box.createVerticalStrut(15));
         	listProjectItem.add(panel_Project_Item);
         	panel_Project_Item.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                	JOptionPane.showMessageDialog(null, "Bạn vừa click vào project " + panel_Project_Item.getProjectName());
+//                	JOptionPane.showMessageDialog(null, "Bạn vừa click vào project " + panel_Project_Item.getProjectName());
+                	GUI_HOME.showProjectDetail(p);
+                	
+        		    ServiceMessage sm = ServiceMessage.getInstance();
+        	        String request = sm.createMessage("LIST_TASKS", sm.createObjectJson("projectId",p.getId()+""));
+        	        System.out.println(request);
+        	        Service.getInstance().sendMessage(request);
                 }
             });
         }
