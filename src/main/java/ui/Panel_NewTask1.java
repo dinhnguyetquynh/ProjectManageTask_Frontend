@@ -2,39 +2,44 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
+import model.Priority;
 import model.Project;
 import model.Request;
+import model.Status;
 import model.Task;
 import model.User;
 import service.MessageListener;
 import service.Service;
+import service.ServiceMessage;
+import utils.GsonHelper;
 
-public class Panel_NewTask extends JPanel implements MessageListener{
+public class Panel_NewTask1 extends JPanel implements MessageListener{
 
-	
 	List<User> listUser = new ArrayList<User>();
 	private Box checkBoxContainer;
 	private JTextField nameTxt;
@@ -42,7 +47,7 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 	private JTextField dayEndTxt;
 	private JTextArea jobDesTxt;
 	private JComboBox priorityComboBox;
-	public Panel_NewTask(Project project) {
+	public Panel_NewTask1(Project project) {
 
 		setLayout(new BorderLayout());
 		
@@ -55,10 +60,13 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 		northPanel.add(titleLbl);
 		add(northPanel,BorderLayout.NORTH);
 		
-		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		centerPanel.setPreferredSize(new Dimension(1600, 400));
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		centerPanel.setPreferredSize(new Dimension(1600, 600));
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 0));
 		centerPanel.setBackground(Color.white);
+		
+		
 		Box formVertical = Box.createVerticalBox();
 		
 		Font fontLbl = new Font("Inter", Font.BOLD, 18);
@@ -101,21 +109,7 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 		dayEnd.add(Box.createHorizontalStrut(25));
 		dayEnd.add(dayEndTxt);
 		
-		//Box độ ưu tiên
-		Box priorityBox = Box.createHorizontalBox();
-		priorityBox.setPreferredSize(new Dimension(800, 35));
-		priorityBox.setMaximumSize(new Dimension(800, 35));
-		JLabel priorityLbl = new JLabel("Độ ưu tiên");
-		priorityLbl.setFont(fontLbl);
 
-		String[] priorityLevels = {"Thấp", "Trung bình", "Cao"};
-		priorityComboBox = new JComboBox<>(priorityLevels);
-		priorityComboBox.setFont(fontLbl);
-		priorityComboBox.setPreferredSize(new Dimension(300, 35));
-
-		priorityBox.add(priorityLbl);
-		priorityBox.add(Box.createHorizontalStrut(20));
-		priorityBox.add(priorityComboBox);
 		
 		//Nhân viên tham gia 
 		Box staff = Box.createHorizontalBox();
@@ -141,6 +135,26 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 		            }
 		        }
 		    });
+	
+		// Tạo dữ liệu giả bằng List<String>
+//		List<String> listUserName = Arrays.asList(
+//		    "Alice", "Bob", "Charlie", "Diana", "Edward", "Fiona", "George", "Helen"
+//		);
+//		for (String name : listUserName) {
+//		    JCheckBox checkBox = new JCheckBox(name);
+//		    checkBox.setFont(fontLbl);
+//		    checkBox.addActionListener(new ActionListener() {
+//		        @Override
+//		        public void actionPerformed(ActionEvent e) {
+//		            JCheckBox source = (JCheckBox) e.getSource();
+//		            if (source.isSelected()) {
+//		                System.out.println("Selected: " + source.getText());
+//		            } else {
+//		                System.out.println("Unselected: " + source.getText());
+//		            }
+//		        }
+//		    });
+		
 		    checkBoxContainer.add(checkBox);
 		    checkBoxContainer.add(Box.createVerticalStrut(10)); // khoảng cách giữa các checkbox
 		}
@@ -167,27 +181,38 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 		jobDes.add(Box.createHorizontalStrut(14));
 		jobDes.add(scrollPane);
 		
-		Box subTask = Box.createHorizontalBox();
-		subTask.setPreferredSize(new Dimension(800, 35));
-		subTask.setMaximumSize(new Dimension(800, 35));
-		JLabel subTaskLbl = new JLabel("Công việc con");
-		subTaskLbl.setFont(fontLbl);
-		JButton subTaskBtn = new JButton("+ Công việc con");
-		subTaskBtn.setFont(fontLbl);
-		subTaskBtn.setBackground(Color.white);
-		subTaskBtn.setMaximumSize(new Dimension(300, 35));
+//		Box subTask = Box.createHorizontalBox();
+//		subTask.setPreferredSize(new Dimension(800, 35));
+//		subTask.setMaximumSize(new Dimension(800, 35));
+//		JLabel subTaskLbl = new JLabel("Công việc con");
+//		subTaskLbl.setFont(fontLbl);
+//		JButton subTaskBtn = new JButton("+ Công việc con");
+//		subTaskBtn.setFont(fontLbl);
+//		subTaskBtn.setBackground(Color.white);
+//		subTaskBtn.setMaximumSize(new Dimension(300, 35));
+//		
+//		
+//		subTask.add(subTaskLbl);
+//		subTask.add(Box.createHorizontalStrut(22));
+//		subTask.add(subTaskBtn);
 		
-		
-		subTask.add(subTaskLbl);
-		subTask.add(Box.createHorizontalStrut(22));
-		subTask.add(subTaskBtn);
-		
-		
+		//Box độ ưu tiên
+		Box priorityBox = Box.createHorizontalBox();
+		priorityBox.setPreferredSize(new Dimension(800, 35));
+		priorityBox.setMaximumSize(new Dimension(800, 35));
+		JLabel priorityLbl = new JLabel("Độ ưu tiên");
+		priorityLbl.setFont(fontLbl);
 
+		String[] priorityLevels = {"LOW", "MEDIUM", "HIGH"};
+		priorityComboBox = new JComboBox<>(priorityLevels);
+		priorityComboBox.setFont(fontLbl);
+		priorityComboBox.setPreferredSize(new Dimension(300, 35));
 	
+		priorityBox.add(priorityLbl);
+		priorityBox.add(Box.createHorizontalStrut(20));
+		priorityBox.add(priorityComboBox);
 		
-		
-		
+		//ADD VÀO FORM
 		formVertical.add(nameTask);
 		formVertical.add(Box.createVerticalStrut(30));
 		formVertical.add(dayStart);
@@ -195,14 +220,16 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 		formVertical.add(dayEnd);
 		formVertical.add(Box.createVerticalStrut(30));
 		
-		formVertical.add(priorityBox);
-		formVertical.add(Box.createVerticalStrut(30));
-		
+
+//		
 		formVertical.add(staff);
 		formVertical.add(Box.createVerticalStrut(30));
 		formVertical.add(jobDes);
 		formVertical.add(Box.createVerticalStrut(30));
-		formVertical.add(subTask);
+		formVertical.add(priorityBox);
+		
+//		formVertical.add(Box.createVerticalStrut(30));
+//		formVertical.add(subTask);
 		
 		centerPanel.add(formVertical);
 		
@@ -217,12 +244,64 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 	      btnNewTask.setBackground(Color.decode("#F299C2"));
 	      btnNewTask.setForeground(Color.decode("#FFFFFF"));
 	      btnNewTask.setFont(new Font("Arial", Font.BOLD, 20));
-	      
 	      btnNewTask.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				createNewTask(project);
+				GUI_HOME.showProjectDetail(project);
+				
 			}
+
+			private void createNewTask(Project project) {
+				 	String taskName = nameTxt.getText().trim();
+				 	
+			        String dayStart = dayStartTxt.getText().trim();
+			        String dayEnd = dayEndTxt.getText().trim();
+			        // Định dạng chuỗi
+			        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+			        // Chuyển đổi từ String sang LocalDateTime
+			        LocalDateTime dayStart1 = LocalDateTime.parse(dayStart, formatter);
+			        LocalDateTime dayEnd1 = LocalDateTime.parse(dayEnd, formatter);
+			        
+			        
+			        String description = jobDesTxt.getText().trim();
+			        String priority = (String) priorityComboBox.getSelectedItem();
+			        
+			        Task newTask = new Task(taskName, description, Priority.valueOf(priority), dayStart1, dayEnd1 , Status.PENDING, project);
+			        
+			        List<Integer> selectedUserIds = new ArrayList<>();
+			        int idx = 0;
+			        for (java.awt.Component comp : checkBoxContainer.getComponents()) {
+			            if (comp instanceof JCheckBox) {
+			                JCheckBox checkBox = (JCheckBox) comp;
+			                if (checkBox.isSelected()) {
+			                    User user = listUser.get(idx); // dựa theo thứ tự trong listUser
+			                    selectedUserIds.add(user.getId()); // giả sử User có getId()
+			                }
+			                idx++;
+			            }
+			        }
+			        ServiceMessage sm = ServiceMessage.getInstance();
+			        //dùng gson chuyển newTask thành String
+			        String newTask1 = GsonHelper.toJson(newTask);
+			        // dùng gson chuyển selected thành string
+			        String selectedUserIds1 = GsonHelper.toJson(selectedUserIds);
+			        
+			     // Tạo object json (theo key)
+			        String taskObject = sm.createObjectJson("task", newTask1);
+			        String userIdsObject = sm.createObjectJson("selectedUserIds", selectedUserIds1);
+			        
+			        String requestJson = sm.createMessage("CREATE_TASK", taskObject, userIdsObject);
+
+			     // Giờ gửi requestJson này qua socket cho server
+			        Service.getInstance().sendMessage(requestJson);
+			        System.out.println("Request tạo task mới là:"+requestJson);
+				
+			}
+
 		});
 	      
 	      
@@ -233,7 +312,12 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 	      
 	      //ADD UI VÀO LISTENER
 	      Service.getInstance().addMessageListener(this);
-	      
+	      SwingUtilities.invokeLater(() -> {
+	    	    ServiceMessage sm = ServiceMessage.getInstance();
+	    	    String request = sm.createMessage("LISTS_USER_PROJECT", sm.createObjectJson("projectId", project.getId() + ""));
+	    	    System.out.println("Req phía client Panel_NewTask là:" + request);
+	    	    Service.getInstance().sendMessage(request);
+	    	});
 	
 	}
 	@Override
@@ -274,6 +358,8 @@ public class Panel_NewTask extends JPanel implements MessageListener{
 
 		
 	}
+	
+
 
 
 }

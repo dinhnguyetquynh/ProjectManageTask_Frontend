@@ -33,11 +33,13 @@ import jakarta.json.JsonValue;
 import java.lang.reflect.Type;
 
 import model.Account;
+import model.Gender;
 import model.Priority;
 import model.Project;
 import model.Request;
 import model.Status;
 import model.Task;
+import model.User;
 import ui.GUI_HOME;
 import utils.GsonHelper;
 
@@ -182,6 +184,28 @@ public class Service {
 			}
 			Request<List<Task>> request1 = new Request<List<Task>>("LIST_TASKS", tasks);
 			notifyListeners(request1);
+			break;
+			
+		case "LISTS_USER_PROJECT":
+			Gson gson1 = new Gson();
+			List<User> listUser = new ArrayList<User>();
+			JsonArray jaUsers = joData.getJsonArray("listUser");
+			for(JsonValue jv:jaUsers) {
+				JsonObject joUser = (JsonObject) jv;
+				int userId = joUser.getInt("id");
+				String userName = joUser.getString("name");
+				String gender = joUser.getString("gender");
+				Gender gender1 = Gender.valueOf(gender);
+				int age = joUser.getInt("age");
+				String email = joUser.getString("email");
+				User user = new User(userId, userName, gender1, age, email);
+				listUser.add(user);	
+			}
+			for(User u:listUser) {
+				System.out.println("USER NHẬN LẠI ĐƯỢC LÀ:"+u);
+			}
+			Request<List<User>> reqUser = new Request<List<User>>("LISTS_USER_PROJECT", listUser);
+			notifyListeners(reqUser);
 			break;
 		
 		}

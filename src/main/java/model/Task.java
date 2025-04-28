@@ -76,7 +76,19 @@ public class Task implements Serializable{
 		this.status = status;
 	}
 	
+	
 
+	public Task(String title, String description, Priority priority, LocalDateTime createAt, LocalDateTime dueDate,
+			Status status, Project project) {
+	
+		this.title = title;
+		this.description = description;
+		this.priority = priority;
+		this.createAt = createAt;
+		this.dueDate = dueDate;
+		this.status = status;
+		this.project = project;
+	}
 
 	public int getId() {
 		return id;

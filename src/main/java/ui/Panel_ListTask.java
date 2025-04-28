@@ -29,6 +29,7 @@ import model.Request;
 import model.Task;
 import service.MessageListener;
 import service.Service;
+import service.ServiceMessage;
 
 public class Panel_ListTask extends JPanel implements MessageListener{
 	 
@@ -119,8 +120,8 @@ public class Panel_ListTask extends JPanel implements MessageListener{
         	        
         	        centerPanel.add(scrollPane);
         	 add(centerPanel, BorderLayout.CENTER);
-
-//        //SOUTH : BUTTON CÔNG VIỆC MỚI 
+        	 
+          //SOUTH : BUTTON CÔNG VIỆC MỚI 
       JPanel southPanel = new JPanel();
       southPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,50,10));
       southPanel.setPreferredSize(new Dimension(100, 100));
@@ -130,7 +131,14 @@ public class Panel_ListTask extends JPanel implements MessageListener{
       btnNewTask.setBackground(Color.decode("#F299C2"));
       btnNewTask.setForeground(Color.decode("#FFFFFF"));
       btnNewTask.setFont(new Font("Arial", Font.BOLD, 16));
-      
+
+		btnNewTask.addActionListener(e -> {
+//		ServiceMessage sm = ServiceMessage.getInstance();
+//	    String request = sm.createMessage("LISTS_USER_PROJECT", sm.createObjectJson("projectId",project.getId()+""));
+//	    System.out.println("Req phía clien:"+request);
+//	    Service.getInstance().sendMessage(request);
+		  GUI_HOME.showNewTask(project);
+		});
       southPanel.add(btnNewTask);
       southPanel.setBackground(Color.white);
       

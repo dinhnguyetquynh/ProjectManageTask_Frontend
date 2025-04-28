@@ -242,6 +242,12 @@ public class GUI_HOME extends JFrame implements MessageListener {
 		    centerPanel.add(detailPanel, "DETAIL_PROJECT");
 		    cardLayout.show(centerPanel, "DETAIL_PROJECT");
 		}
+	  
+	  public static void showNewTask(Project project) {
+		    Panel_NewTask1 newTask = new Panel_NewTask1(project);
+		    centerPanel.add(newTask,"NEW_TASK");
+		    cardLayout.show(centerPanel, "NEW_TASK");
+		}
 
 
 	@Override

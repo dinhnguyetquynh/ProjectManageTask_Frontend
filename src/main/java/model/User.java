@@ -62,6 +62,16 @@ public class User implements Serializable{
 		this.email = email;
 		this.manager = manager;
 	}
+	
+
+	public User(int id, String name, Gender gender, int age, String email) {
+	
+		this.id = id;
+		this.name = name;
+		this.gender = gender;
+		this.age = age;
+		this.email = email;
+	}
 
 	public int getId() {
 		return id;

@@ -84,11 +84,11 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 		b.add(Box.createVerticalStrut(5));
 		b.add(b1 = Box.createHorizontalBox());
 		JLabel lblTenDuAn, lblSoNguoi;
-		
+		b1.setBorder(new EmptyBorder(0, 10, 0, 10)); 
 		b1.add(lblTenDuAn = new JLabel(project.getTitle()));
-		b1.add(Box.createHorizontalStrut(35));
+//		b1.add(Box.createHorizontalStrut(10));
+		b1.add(Box.createHorizontalGlue()); // Thêm dòng này để lbl dự án sát trái
 		
-//		String numberUser = String.valueOf(project.getNumberUser());
 		b1.add(lblSoNguoi = new JLabel(project.getNumberUser()+""));
 		b1.add(txtAreaNgay = new JTextArea("Từ: " + project.getStartDate() + "\n" + "Đến: " + project.getEndDate()));
 		
@@ -106,32 +106,40 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 			}
 		}
 		
-		b1.add(Box.createHorizontalStrut(25));
-		btnTrash = new JButton("");
-		if(role == "Manager") {
-			b1.add(btnTrash);
-			btnTrash.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("img\\24-trash.png")));
+//		b1.add(Box.createHorizontalStrut(10));
+//		btnTrash = new JButton("");
+//		if(role == "Manager") {
+//			b1.add(btnTrash);
+//			btnTrash.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("img\\24-trash.png")));
+//		}
+//		
+//		
+//		// Tạo màu trong suốt cho button
+//		btnTrash.setBorderPainted(false);
+//		btnTrash.setContentAreaFilled (false);
+//		btnTrash.setFocusPainted (false);
+		if ("Manager".equals(role)) {
+		    btnTrash = new JButton("");
+		    btnTrash.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("img\\24-trash.png")));
+		    btnTrash.setBorderPainted(false);
+		    btnTrash.setContentAreaFilled(false);
+		    btnTrash.setFocusPainted(false);
+		    btnTrash.addActionListener(this);
+		    b1.add(btnTrash);
 		}
-		
-		
-		// Tạo màu trong suốt cho button
-		btnTrash.setBorderPainted(false);
-		btnTrash.setContentAreaFilled (false);
-		btnTrash.setFocusPainted (false);
-		
 		lblTenDuAn.setFont(font);
 		lblSoNguoi.setFont(font);
 		txtAreaNgay.setFont(font);
 		txtAreaGhiChu.setFont(font);
 		
 		// Chỉnh kích thước cho các thành phần
-		lblTenDuAn.setPreferredSize(new Dimension(295, 35));
-		lblTenDuAn.setMaximumSize(new Dimension(295, 35));
+		lblTenDuAn.setPreferredSize(new Dimension(300, 35));
+		lblTenDuAn.setMaximumSize(new Dimension(300, 35));
 		
-		lblSoNguoi.setPreferredSize(new Dimension(165, 35));
-		lblSoNguoi.setMaximumSize(new Dimension(165, 35));
+		lblSoNguoi.setPreferredSize(new Dimension(150, 35));
+		lblSoNguoi.setMaximumSize(new Dimension(150, 35));
 		
-		txtAreaNgay.setPreferredSize(new Dimension(175, 65));
+		txtAreaNgay.setPreferredSize(new Dimension(160, 65));
 		
 		// Không cho chỉnh sửa ngày và ghi chú, chỉnh màu trong suốt
 		txtAreaNgay.setEditable(false);
