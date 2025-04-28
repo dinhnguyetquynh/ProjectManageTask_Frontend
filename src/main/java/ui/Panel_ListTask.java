@@ -143,6 +143,33 @@ public class Panel_ListTask extends JPanel implements MessageListener{
       southPanel.setBackground(Color.white);
       
       add(southPanel,BorderLayout.SOUTH);
+      
+   // >>>>> BUTTON Xóa công việc
+      RoundedButton btnDeleteTask = new RoundedButton("Xóa công việc", 15);
+      btnDeleteTask.setPreferredSize(new Dimension(160, 50));
+      btnDeleteTask.setBackground(Color.decode("#EB5757")); // màu đỏ
+      btnDeleteTask.setForeground(Color.white);
+      btnDeleteTask.setFont(new Font("Arial", Font.BOLD, 16));
+      btnDeleteTask.addActionListener(e -> {
+    	    int selectedRow = table.getSelectedRow();
+    	    if (selectedRow == -1) {
+    	        System.out.println("Chưa chọn công việc để xóa!");
+    	        return;
+    	    }
+    	    
+    	    String taskIdStr = (String) table.getValueAt(selectedRow, 0); // Lấy id Task
+    	    int taskId = Integer.parseInt(taskIdStr);
+
+    	    // Gửi yêu cầu xóa task
+    	    ServiceMessage sm = ServiceMessage.getInstance();
+    	    String request = sm.createMessage("DELETE_TASK", sm.createObjectJson("taskId", taskIdStr));
+    	    Service.getInstance().sendMessage(request);
+
+    	    System.out.println("Gửi yêu cầu xóa task với id: " + taskId);
+    	});
+
+      // (Bước 2 xử lý click sẽ viết ở dưới)
+      southPanel.add(btnDeleteTask);
 //     
       //THEM UI VAO listener
       Service.getInstance().addMessageListener(this);

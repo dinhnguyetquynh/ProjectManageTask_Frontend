@@ -180,21 +180,7 @@ public class Panel_NewTask1 extends JPanel implements MessageListener{
 		jobDes.add(jobDesLbl);
 		jobDes.add(Box.createHorizontalStrut(14));
 		jobDes.add(scrollPane);
-		
-//		Box subTask = Box.createHorizontalBox();
-//		subTask.setPreferredSize(new Dimension(800, 35));
-//		subTask.setMaximumSize(new Dimension(800, 35));
-//		JLabel subTaskLbl = new JLabel("Công việc con");
-//		subTaskLbl.setFont(fontLbl);
-//		JButton subTaskBtn = new JButton("+ Công việc con");
-//		subTaskBtn.setFont(fontLbl);
-//		subTaskBtn.setBackground(Color.white);
-//		subTaskBtn.setMaximumSize(new Dimension(300, 35));
-//		
-//		
-//		subTask.add(subTaskLbl);
-//		subTask.add(Box.createHorizontalStrut(22));
-//		subTask.add(subTaskBtn);
+
 		
 		//Box độ ưu tiên
 		Box priorityBox = Box.createHorizontalBox();
