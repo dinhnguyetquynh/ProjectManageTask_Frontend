@@ -36,6 +36,8 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 	private Project project;
 	private String projectName;
 	private String role;
+
+	private JButton btnUpdate;
 	
 	public Panel_Project_Item(Project p) {
 		this.project = p;
@@ -127,6 +129,23 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 		    btnTrash.addActionListener(this);
 		    b1.add(btnTrash);
 		}
+		
+		if("Manager".equals(role)) {
+			btnUpdate = new JButton("");
+//			btnUpdate.setFont(font);
+//			btnUpdate.setPreferredSize(new Dimension(120, 35));
+//			btnUpdate.setMaximumSize(new Dimension(120, 35));
+			btnUpdate.addActionListener(this); 
+			btnUpdate.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("img\\update3.png")));
+			btnUpdate.setBorderPainted(false);
+			btnUpdate.setContentAreaFilled(false);
+			btnUpdate.setFocusPainted(false);
+			
+			
+			b1.add(btnUpdate);
+		}
+		
+		
 		lblTenDuAn.setFont(font);
 		lblSoNguoi.setFont(font);
 		txtAreaNgay.setFont(font);
@@ -171,6 +190,9 @@ public class Panel_Project_Item extends JPanel implements ActionListener{
 	        String request = sm.createMessage("DELETE_PROJECT", sm.createObjectJson("projectId", project.getId()+""));
 	        System.out.println(request);
 	        Service.getInstance().sendMessage(request);
+		}else if(o.equals(btnUpdate)) {
+			GUI_HOME.showProjectUpdate(project);
+			
 		}
 		
 	}

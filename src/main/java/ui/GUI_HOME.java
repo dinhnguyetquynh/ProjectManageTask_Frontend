@@ -60,9 +60,9 @@ public class GUI_HOME extends JFrame implements MessageListener {
 	private static JPanel centerPanel;
 	private static Account account;
 
-	private Panel_DanhSachProject centerListProject;
+	private static Panel_DanhSachProject centerListProject;
 
-	private List<Project> list=null;
+	private static List<Project> list=null;
 	
 	public static void screenHome(Account account) {
 		EventQueue.invokeLater(new Runnable() {
@@ -88,6 +88,7 @@ public class GUI_HOME extends JFrame implements MessageListener {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenWidth = screenSize.width;
 		int screenHeight = screenSize.height;
+		System.out.println("KICH THUOC MAN HINH LA:"+screenWidth+","+screenHeight);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(screenWidth,screenHeight);
 		setLocationRelativeTo(null);
@@ -248,6 +249,23 @@ public class GUI_HOME extends JFrame implements MessageListener {
 		    centerPanel.add(newTask,"NEW_TASK");
 		    cardLayout.show(centerPanel, "NEW_TASK");
 		}
+	  
+	  public static void showProjectUpdate(Project project) {
+		    ProjectUpdatePanel updatePanel = new ProjectUpdatePanel(project);
+		    centerPanel.add(updatePanel,"UPDATE_PROJECT");
+		    cardLayout.show(centerPanel, "UPDATE_PROJECT");
+		}
+	  
+	  public static void backToProjectList() {
+		    centerPanel.removeAll();
+		    centerListProject = new Panel_DanhSachProject(list);
+		    centerPanel.add(centerListProject, "LIST_PROJECT");
+		    centerPanel.revalidate();
+		    centerPanel.repaint();
+		    cardLayout.show(centerPanel, "LIST_PROJECT");
+		}
+	  
+	  
 
 
 	@Override
